@@ -24,12 +24,6 @@ func waitToExit() {
 	}()
 }
 
-//func NewTestLogger() gdq.AppLogFunc {
-//	return func(lvl gdq.LogLevel, f string, args ...interface{}) {
-//		fmt.Sprintf(lvl.String()+": "+f, args...)
-//	}
-//}
-
 func create(dq gdq.Interface) {
 	log.Info("","len:",dq.Depth())
 	basestring := "testasdfasdfas--"
@@ -48,7 +42,7 @@ func create(dq gdq.Interface) {
 	}
 
 	log.Info("","end put, total:", dq.Depth(), " use time:", time.Since(start))
-	//fmt.Printf("end put, total:%d, use time:%v\n",dq.Depth(),time.Since(start))
+
 	return
 }
 
@@ -71,10 +65,22 @@ func consum(dq gdq.Interface) {
 	return
 }
 func main() {
-	//l:= NewTestLogger()
 
 	dqName := "mq"
 	tmpDir := "./data"
+	// create dir if it does not exist
+	if _, err := os.Stat(tmpDir); err != nil {
+
+		log.Info("path " + tmpDir + " not exists " )
+		err := os.MkdirAll(tmpDir, os.ModePerm)
+
+		if err != nil {
+			log.Info("Error creating directory")
+			log.Info(err.Error())
+			return
+		}
+	}
+
 	dq := gdq.New(dqName,
 		tmpDir,
 		1024*1024*4,
