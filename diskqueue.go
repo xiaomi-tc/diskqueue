@@ -147,9 +147,9 @@ func (d *diskQueue) exit(deleted bool) error {
 	d.exitFlag = 1
 
 	if deleted {
-		log.Info("DISKQUEUE(" + d.name + "): deleting", )
+		log.Debug("DISKQUEUE(" + d.name + "): deleting", )
 	} else {
-		log.Info("DISKQUEUE("+ d.name +"): closing")
+		log.Debug("DISKQUEUE("+ d.name +"): closing")
 	}
 
 	close(d.exitChan)
@@ -179,7 +179,7 @@ func (d *diskQueue) Empty() error {
 		return errors.New("exiting")
 	}
 
-	log.Info( "DISKQUEUE("+ d.name +"): emptying")
+	log.Debug( "DISKQUEUE("+ d.name +"): emptying")
 
 	d.emptyChan <- 1
 	return <-d.emptyResponseChan
@@ -243,7 +243,7 @@ func (d *diskQueue) readOne() ([]byte, error) {
 			return nil, err
 		}
 
-		log.Info( "DISKQUEUE(" + d.name + "): readOne() opened "+ curFileName)
+		log.Debug( "DISKQUEUE(" + d.name + "): readOne() opened "+ curFileName)
 
 		if d.readPos > 0 {
 			_, err = d.readFile.Seek(d.readPos, 0)
@@ -315,7 +315,7 @@ func (d *diskQueue) writeOne(data []byte) error {
 			return err
 		}
 
-		log.Info( "DISKQUEUE(" + d.name +"): writeOne() opened " + curFileName)
+		log.Debug( "DISKQUEUE(" + d.name +"): writeOne() opened " + curFileName)
 
 		if d.writePos > 0 {
 			_, err = d.writeFile.Seek(d.writePos, 0)
@@ -618,7 +618,7 @@ func (d *diskQueue) ioLoop() {
 	}
 
 exit:
-	log.Info( "DISKQUEUE("+d.name+"): closing ... ioLoop")
+	log.Debug( "DISKQUEUE("+d.name+"): closing ... ioLoop")
 	syncTicker.Stop()
 	d.exitSyncChan <- 1
 }
